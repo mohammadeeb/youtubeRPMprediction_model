@@ -29,13 +29,13 @@ Functions:
 
 
 How it works?
-> calling load_data() and normalizing data using z-score 
-> setting inital w,b 
-> gets inputs from the user 
-> calculates w_final, b_final using gradeint_descent() 
-> normaling new X 
-> computing the prediction using the linear regression equation(compute_modelOutput)
-> prints the prediction
+1. calling load_data() and normalizing data using z-score 
+2. setting inital w,b 
+3. gets inputs from the user 
+4. calculates w_final, b_final using gradeint_descent() 
+5. normaling new X
+6. computing the prediction using the linear regression equation(compute_modelOutput)
+7. prints the prediction
 
 
 Why normalizing?

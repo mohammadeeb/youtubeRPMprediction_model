@@ -1,6 +1,6 @@
 import numpy as np
+import sys
 from countryCPM import get_country_level
-
 
 def load_data(filename):
     data = np.genfromtxt(filename, delimiter=',', skip_header=1)
@@ -37,7 +37,7 @@ def compute_Cost(X, y , w , b):
 
     return sum_cost
 
-def compute_Gradient(X, y, w, b):
+def compute_gradient(X, y, w, b):
     f_wb = np.dot(X, w) + b
 
     m,n = X.shape
@@ -56,17 +56,23 @@ def compute_Gradient(X, y, w, b):
 
     return dw, db
 
-def gradeint_Descent(X, y , w_init, b_init, alpha, iters):
+def gradeint_descent(X, y , w_init, b_init, alpha, iters):
     w = w_init
     b = b_init
 
     
 
     for i in range(iters):
-        dw, db = compute_Gradient(X, y, w, b)
+        dw, db = compute_gradient(X, y, w, b)
         w = w - alpha*dw
         b = b - alpha*db
+        if i % (iters // 50) == 0 or i == iters - 1:
+            percent = int((i + 1) / iters * 100)
+            bar = "#" * (percent // 2) + "-" * (50 - percent // 2)
+            sys.stdout.write(f"\rModel Training [{bar}] {percent}%")
+            sys.stdout.flush()
 
+    print()
 
     return w, b
 
@@ -76,8 +82,8 @@ X_train, y_train, mu, sigma = load_data("youtube_data.txt")
 w_init = np.zeros(X_train.shape[1])
 b_init = 0.0
 
-alpha = 0.01
-iters = 10000
+alpha = 0.001
+iters = 1000
 
 valid_niches = {"tech": 0, "gaming": 1, "finance": 2, "education": 3}
 
@@ -113,7 +119,7 @@ while True:
 
 retention = retention / 100
 print("")
-w_final, b_final = gradeint_Descent(X_train, np.log(y_train), w_init, b_init, alpha, iters )
+w_final, b_final = gradeint_descent(X_train, np.log(y_train), w_init, b_init, alpha, iters )
 
 c = get_country_level(country)
 
@@ -128,4 +134,3 @@ prediction = max(float(prediction), 0.0)
 print("\n------------------------------------------")
 print(f"Your profit is {float(prediction):.2f} $ per 1000 views.")
 print("------------------------------------------")
-
